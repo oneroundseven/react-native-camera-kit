@@ -59,15 +59,19 @@
     
     if (self.overlayObject.width < self.overlayObject.height) {
         
+        CGFloat topHeight = self.overlayObject.topHeight;
+        CGFloat bottomHeight = self.overlayObject.bottomHeight;
+
         centerSize.width = self.frame.size.width;
-        centerSize.height = self.frame.size.height * self.overlayObject.ratio;
-        
+        centerSize.height = self.frame.size.height-topHeight-bottomHeight;//self.frame.size.height * self.overlayObject.ratio;
+
         sideSize.width = centerSize.width;
-        sideSize.height = (self.frame.size.height - centerSize.height)/2.0;
-        
-        self.topView.frame = CGRectMake(0, 0, sideSize.width, sideSize.height);
+        sideSize.height = bottomHeight;//(self.frame.size.height - centerSize.height)/2.0;
+
+        self.topView.frame = CGRectMake(0, 0, sideSize.width, topHeight/*sideSize.height*/);
         self.centerView.frame = CGRectMake(0, self.topView.frame.size.height + self.topView.frame.origin.y, centerSize.width, centerSize.height);
         self.bottomView.frame = CGRectMake(0, self.centerView.frame.size.height + self.centerView.frame.origin.y, sideSize.width, sideSize.height);
+        
     }
     else if (self.overlayObject.width > self.overlayObject.height){
         centerSize.width = self.frame.size.width / self.overlayObject.ratio;

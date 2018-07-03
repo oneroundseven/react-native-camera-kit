@@ -15,6 +15,9 @@
 @property (nonatomic, readonly) float height;
 @property (nonatomic, readonly) float ratio;
 
+@property (nonatomic, readonly) float topHeight;
+@property (nonatomic, readonly) float bottomHeight;
+
 -(instancetype)initWithString:(NSString*)str;
 
 
