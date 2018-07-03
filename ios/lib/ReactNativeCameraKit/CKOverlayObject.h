@@ -18,6 +18,8 @@
 @property (nonatomic, readonly) float topHeight;
 @property (nonatomic, readonly) float bottomHeight;
 
+@property (nonatomic, readonly) BOOL isCustomOverlayHeight;
+
 -(instancetype)initWithString:(NSString*)str;
 
 

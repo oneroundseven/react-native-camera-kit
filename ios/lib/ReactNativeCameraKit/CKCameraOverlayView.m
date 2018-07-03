@@ -52,48 +52,70 @@
 
 -(void)setOverlayParts {
     
-    if (self.overlayObject.ratio == 0) return;
-    
-    CGSize centerSize = CGSizeZero;
-    CGSize sideSize = CGSizeZero;
-    
-    if (self.overlayObject.width < self.overlayObject.height) {
+    if (self.overlayObject.isCustomOverlayHeight) {
+        
+        CGSize centerSize = CGSizeZero;
+        CGSize bottomSize = CGSizeZero;
+        CGSize topSize = CGSizeZero;
         
         CGFloat topHeight = self.overlayObject.topHeight;
         CGFloat bottomHeight = self.overlayObject.bottomHeight;
-
+        
         centerSize.width = self.frame.size.width;
-        centerSize.height = self.frame.size.height-topHeight-bottomHeight;//self.frame.size.height * self.overlayObject.ratio;
-
-        sideSize.width = centerSize.width;
-        sideSize.height = bottomHeight;//(self.frame.size.height - centerSize.height)/2.0;
-
-        self.topView.frame = CGRectMake(0, 0, sideSize.width, topHeight/*sideSize.height*/);
+        centerSize.height = self.frame.size.height-topHeight-bottomHeight;
+        
+        bottomSize.width = centerSize.width;
+        bottomSize.height = bottomHeight;
+        
+        topSize.width = centerSize.width;
+        topSize.height = topHeight;
+        
+        self.topView.frame = CGRectMake(0, 0, topSize.width, topSize.height);
         self.centerView.frame = CGRectMake(0, self.topView.frame.size.height + self.topView.frame.origin.y, centerSize.width, centerSize.height);
-        self.bottomView.frame = CGRectMake(0, self.centerView.frame.size.height + self.centerView.frame.origin.y, sideSize.width, sideSize.height);
+        self.bottomView.frame = CGRectMake(0, self.centerView.frame.size.height + self.centerView.frame.origin.y, bottomSize.width, bottomSize.height);
         
-    }
-    else if (self.overlayObject.width > self.overlayObject.height){
-        centerSize.width = self.frame.size.width / self.overlayObject.ratio;
-        centerSize.height = self.frame.size.height;
+    } else {
         
-        sideSize.width = (self.frame.size.width - centerSize.width)/2.0;
-        sideSize.height = centerSize.height;
+        if (self.overlayObject.ratio == 0) return;
         
-        self.topView.frame = CGRectMake(0, 0, sideSize.width, sideSize.height);
-        self.centerView.frame = CGRectMake(self.topView.frame.size.width + self.topView.frame.origin.x, 0, centerSize.width, centerSize.height);
-        self.bottomView.frame = CGRectMake(self.centerView.frame.size.width + self.centerView.frame.origin.x, 0, sideSize.width, sideSize.height);
-    }
-    else { // ratio is 1:1
-        centerSize.width = self.frame.size.width;
-        centerSize.height = self.frame.size.width;
+        CGSize centerSize = CGSizeZero;
+        CGSize sideSize = CGSizeZero;
         
-        sideSize.width = centerSize.width;
-        sideSize.height = (self.frame.size.height - centerSize.height)/2.0;
+        if (self.overlayObject.width < self.overlayObject.height) {
+            
+            centerSize.width = self.frame.size.width;
+            centerSize.height = self.frame.size.height * self.overlayObject.ratio;
+            
+            sideSize.width = centerSize.width;
+            sideSize.height = (self.frame.size.height - centerSize.height)/2.0;
+            
+            self.topView.frame = CGRectMake(0, 0, sideSize.width, sideSize.height);
+            self.centerView.frame = CGRectMake(0, self.topView.frame.size.height + self.topView.frame.origin.y, centerSize.width, centerSize.height);
+            self.bottomView.frame = CGRectMake(0, self.centerView.frame.size.height + self.centerView.frame.origin.y, sideSize.width, sideSize.height);
+        }
+        else if (self.overlayObject.width > self.overlayObject.height){
+            centerSize.width = self.frame.size.width / self.overlayObject.ratio;
+            centerSize.height = self.frame.size.height;
+            
+            sideSize.width = (self.frame.size.width - centerSize.width)/2.0;
+            sideSize.height = centerSize.height;
+            
+            self.topView.frame = CGRectMake(0, 0, sideSize.width, sideSize.height);
+            self.centerView.frame = CGRectMake(self.topView.frame.size.width + self.topView.frame.origin.x, 0, centerSize.width, centerSize.height);
+            self.bottomView.frame = CGRectMake(self.centerView.frame.size.width + self.centerView.frame.origin.x, 0, sideSize.width, sideSize.height);
+        }
+        else { // ratio is 1:1
+            centerSize.width = self.frame.size.width;
+            centerSize.height = self.frame.size.width;
+            
+            sideSize.width = centerSize.width;
+            sideSize.height = (self.frame.size.height - centerSize.height)/2.0;
+            
+            self.topView.frame = CGRectMake(0, 0, sideSize.width, sideSize.height);
+            self.centerView.frame = CGRectMake(0, self.topView.frame.size.height + self.topView.frame.origin.y, centerSize.width, centerSize.height);
+            self.bottomView.frame = CGRectMake(0, self.centerView.frame.size.height + self.centerView.frame.origin.y, sideSize.width, sideSize.height);
+        }
         
-        self.topView.frame = CGRectMake(0, 0, sideSize.width, sideSize.height);
-        self.centerView.frame = CGRectMake(0, self.topView.frame.size.height + self.topView.frame.origin.y, centerSize.width, centerSize.height);
-        self.bottomView.frame = CGRectMake(0, self.centerView.frame.size.height + self.centerView.frame.origin.y, sideSize.width, sideSize.height);
     }
 }
 

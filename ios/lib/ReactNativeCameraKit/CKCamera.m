@@ -776,37 +776,56 @@ RCT_ENUM_CONVERTER(CKCameraZoomMode, (@{
 
 +(CGRect)cropRectForSize:(CGRect)frame overlayObject:(CKOverlayObject*)overlayObject {
     
-    CGRect ans = CGRectZero;
-    CGSize centerSize = CGSizeZero;
+    if (overlayObject.isCustomOverlayHeight) {
+        
+        CGRect ans = CGRectZero;
+        CGSize centerSize = CGSizeZero;
     
-    if (overlayObject.width < overlayObject.height) {
         centerSize.width = frame.size.width;
-        centerSize.height = frame.size.height * overlayObject.ratio;
+        centerSize.height = frame.size.height - overlayObject.topHeight - overlayObject.bottomHeight;
         
         ans.origin.x = 0;
-        ans.origin.y = (frame.size.height - centerSize.height)*0.5;
+        ans.origin.y = overlayObject.topHeight;
         
+        ans.size = centerSize;
+        ans.origin.x += frame.origin.x;
+        ans.origin.y += frame.origin.y;
+        return ans;
+        
+    } else {
+        
+        CGRect ans = CGRectZero;
+        CGSize centerSize = CGSizeZero;
+        
+        if (overlayObject.width < overlayObject.height) {
+            centerSize.width = frame.size.width;
+            centerSize.height = frame.size.height * overlayObject.ratio;
+            
+            ans.origin.x = 0;
+            ans.origin.y = (frame.size.height - centerSize.height)*0.5;
+            
+        }
+        else if (overlayObject.width > overlayObject.height){
+            centerSize.width = frame.size.width / overlayObject.ratio;
+            centerSize.height = frame.size.height;
+            
+            ans.origin.x = (frame.size.width - centerSize.width)*0.5;
+            ans.origin.y = 0;
+            
+        }
+        else { // ratio is 1:1
+            centerSize.width = frame.size.width;
+            centerSize.height = frame.size.width;
+            
+            ans.origin.x = 0;
+            ans.origin.y = (frame.size.height - centerSize.height)/2;
+        }
+        
+        ans.size = centerSize;
+        ans.origin.x += frame.origin.x;
+        ans.origin.y += frame.origin.y;
+        return ans;
     }
-    else if (overlayObject.width > overlayObject.height){
-        centerSize.width = frame.size.width / overlayObject.ratio;
-        centerSize.height = frame.size.height;
-        
-        ans.origin.x = (frame.size.width - centerSize.width)*0.5;
-        ans.origin.y = 0;
-        
-    }
-    else { // ratio is 1:1
-        centerSize.width = frame.size.width;
-        centerSize.height = frame.size.width;
-        
-        ans.origin.x = 0;
-        ans.origin.y = (frame.size.height - centerSize.height)/2;
-    }
-    
-    ans.size = centerSize;
-    ans.origin.x += frame.origin.x;
-    ans.origin.y += frame.origin.y;
-    return ans;
 }
 
 +(CGSize)cropImageToPreviewSize:(UIImage*)image size:(CGSize)previewSize {
