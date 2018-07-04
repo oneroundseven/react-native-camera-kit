@@ -23,6 +23,9 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback {
     @ColorInt private int frameColor = Color.GREEN;
     @ColorInt private int laserColor = Color.RED;
 
+    public static int marginTop;
+    public static int marginBottom;
+
     public CameraView(ThemedReactContext context) {
         super(context);
         surface = new SurfaceView(context);
@@ -35,8 +38,16 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int actualPreviewWidth = getResources().getDisplayMetrics().widthPixels;
         int actualPreviewHeight = getResources().getDisplayMetrics().heightPixels;
-        int height = Utils.convertDeviceHeightToSupportedAspectRatio(actualPreviewWidth, actualPreviewHeight);
-        surface.layout(0, 0, actualPreviewWidth, height);
+
+        int height = Utils.convertDeviceHeightToSupportedAspectRatio(actualPreviewWidth, actualPreviewHeight - marginTop - marginBottom);
+
+        if (marginTop != 0 || marginBottom != 0) {
+            surface.layout(0, marginTop, actualPreviewWidth, marginTop + height);
+        } else {
+            int topMargin = actualPreviewHeight / 2 - height / 2;
+            surface.layout(0, topMargin, actualPreviewWidth, topMargin + height);
+        }
+
         if (barcodeFrame != null) {
             ((View) barcodeFrame).layout(0, 0, actualPreviewWidth, height);
         }

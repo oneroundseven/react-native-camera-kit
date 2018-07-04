@@ -9,11 +9,14 @@ import android.hardware.Camera;
 import android.hardware.SensorManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.OrientationEventListener;
 import android.view.WindowManager;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -259,7 +262,7 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
             Display display = wm.getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            size.y = Utils.convertDeviceHeightToSupportedAspectRatio(size.x, size.y);
+            size.y = Utils.convertDeviceHeightToSupportedAspectRatio(size.x, size.y - CameraView.marginTop - CameraView.marginBottom);
             if (camera == null) return;
             List<Camera.Size> supportedPreviewSizes = camera.getParameters().getSupportedPreviewSizes();
             List<Camera.Size> supportedPictureSizes = camera.getParameters().getSupportedPictureSizes();
@@ -309,6 +312,24 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
         shouldScan = scanBarcode;
         if (shouldScan && camera != null) {
             camera.setOneShotPreviewCallback(previewCallback);
+        }
+    }
+
+    @ReactProp(name = "cameraOptions")
+    public void setCameraOptions(CameraView view, ReadableMap readableMap) {
+        String ratioOverlay = readableMap.getString("ratioOverlay");
+        if (TextUtils.isEmpty(ratioOverlay)) {
+            return;
+        }
+
+        if (ratioOverlay.startsWith("@")) {
+            String[] nums = ratioOverlay.substring(1).split(":");
+            Log.e("CameraViewManager", "ratioOverlay: " + nums[0] + "-" + nums[1]);
+            CameraView.marginTop = Integer.valueOf(nums[0]);
+            CameraView.marginBottom = Integer.valueOf(nums[1]);
+        } else {
+            String[] nums = ratioOverlay.split(":");
+            Utils.MAX_SCREEN_RATIO = Float.valueOf(nums[0]) / Float.valueOf(nums[1]);
         }
     }
 

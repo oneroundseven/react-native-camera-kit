@@ -27,7 +27,7 @@ public class Utils {
     private final static String CONTENT_PREFIX = "content://";
     public final static String FILE_PREFIX = "file://";
     private static final int MAX_SAMPLE_SIZE = 8;
-    private static final float MAX_SCREEN_RATIO = 16 / 9f;
+    public static float MAX_SCREEN_RATIO = 16 / 9f;
 
     @Nullable
     public static String getStringSafe(ReadableMap map, String key) {
