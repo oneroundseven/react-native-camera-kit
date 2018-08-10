@@ -212,7 +212,7 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
         if (camera == null) return;
         int supportedRotation = getSupportedRotation(rotation);
         if (supportedRotation == currentRotation && !force) return;
-        currentRotation = supportedRotation;
+       // currentRotation = supportedRotation;
 
         if (cameraReleased.get()) return;
         Camera.Parameters parameters = camera.getParameters();
